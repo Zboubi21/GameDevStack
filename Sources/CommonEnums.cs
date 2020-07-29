@@ -21,4 +21,16 @@ namespace GameDevStack.CommonEnums
         LogWarning,
         LogError,
     }
+
+    [Serializable] public enum ColorType
+    {
+        White,
+        Black,
+        Red,
+        Green,
+        Blue,
+        Yellow,
+        Orange,
+        Purple
+    }
 }
