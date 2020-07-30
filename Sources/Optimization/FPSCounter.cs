@@ -11,13 +11,13 @@ namespace GameDevStack.Optimization
         [SerializeField] private ColorType m_FpsColor = ColorType.Yellow;
         [SerializeField] private float m_UpdateInterval = 0.5f;
 
-        protected float m_FramesAccumulated = 0f;
-        protected float m_FramesDrawnInTheInterval = 0f;
-        protected float m_TimeLeft ;
-        protected TextMeshProUGUI m_Text;
-        protected int m_CurrentFPS;
+        private float m_FramesAccumulated = 0f;
+        private float m_FramesDrawnInTheInterval = 0f;
+        private float m_TimeLeft ;
+        private TextMeshProUGUI m_Text;
+        private int m_CurrentFPS;
 
-        static string[] m_StringsFrom00To300 = {
+        private static string[] m_StringsFrom00To300 = {
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
             "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
             "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
