@@ -3,9 +3,10 @@
     public interface IState
     {
         void Enter();
+        void Exit();
+
         void FixedUpdate();
         void Update();
         void LateUpdate();
-        void Exit();
     }
 }
