@@ -247,9 +247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527074057cece3548bc51b9b5789af3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CurrentStateString: 
-  m_LastStateString: 
-  m_IsPlaying: 0
   m_PlayingAtStart: 1
   m_IdleKeyCode: 113
   m_MoveKeyCode: 115
@@ -282,9 +279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b31aa8243ae394e9cd2bc5161e3b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CurrentStateString: 
-  m_LastStateString: 
-  m_IsPlaying: 0
   m_PlayingAtStart: 1
   m_IdleKeyCode: 97
   m_MoveKeyCode: 122

@@ -11,14 +11,16 @@ namespace GameDevStack.Patterns
         /************
         * Constants *
         ************/
-        private const string STATE_COUNT_ERROR = "You don't have the same state enum count and state script count!";
+        private const string STATE_COUNT_ERROR = "You do not have the same state enum count and state script count!";
+        private const int MAX_LAST_STATES_COUNT = 10;
+        private const string SET_MAX_LAST_STATES_COUNT = "You cannot set a count < 1!";
 
         /*****************
         * SerializeField *
         *****************/
         [Header("Debug")]
-        [SerializeField] public string m_CurrentStateString;
-        [SerializeField] public string m_LastStateString;
+        [SerializeField] private string m_CurrentStateString;
+        [SerializeField] private string m_LastStateString;
 
         /**********
         * Private *
@@ -29,13 +31,21 @@ namespace GameDevStack.Patterns
         private IState m_LastIState = null;
         private T m_LastState = default;
         private bool m_IsPlaying = false;
+        private List<T> m_LastStates = new List<T>();
 
-        /*********
-        * Getter *
-        *********/
+        /**********
+        * Getters *
+        **********/
+        public Dictionary<T, IState> States => m_States;
+        public IState CurrentIState => m_CurrentIState;
         public T CurrentState => m_CurrentState;
         //public T LastState => m_LastIState == null ? default : m_LastState;
+        public string CurrentStateString => m_CurrentStateString;
+        public IState LastIState => m_LastIState;
+        public string LastStateString => m_LastStateString;
         public bool IsPlaying => m_IsPlaying;
+        public List<T> LastStates => m_LastStates;
+        private int m_MaxLastStatesCount = -1;
 
         public bool TryGetLastState(out T lastState)
         {
@@ -83,6 +93,7 @@ namespace GameDevStack.Patterns
         /*******
         * Core *
         *******/
+        // Public
         public void Start()
         {
             if (m_IsPlaying) return;
@@ -110,12 +121,22 @@ namespace GameDevStack.Patterns
             m_IsPlaying = false;
         }
 
+        public void SetMaxLastStatesCount(int count)
+        {
+            if (count < 1)
+                Debug.LogError(SET_MAX_LAST_STATES_COUNT);
+            else
+                m_MaxLastStatesCount = count;
+        }
+
+        // Private
         private void SetLastState(T state)
         {
             m_LastIState = m_States[state];
             m_LastState = state;
             //m_LastStateString = m_LastState.ToString();
             m_LastStateString = m_LastIState.ToString();
+            AddLastState(state);
         }
 
         private void SetCurrentState(T state)
@@ -144,6 +165,14 @@ namespace GameDevStack.Patterns
             if (m_CurrentIState != null)
                 Debug.Log(m_CurrentIState + " Exit");
             //Debug.Log(m_CurrentState + " Exit");
+        }
+
+        private void AddLastState(T lastState)
+        {
+            int maxCount = m_MaxLastStatesCount == -1 ? MAX_LAST_STATES_COUNT : m_MaxLastStatesCount;
+            if (m_LastStates.Count + 1 > maxCount)
+                m_LastStates.RemoveAt(0);
+            m_LastStates.Add(lastState);
         }
 
         /*********

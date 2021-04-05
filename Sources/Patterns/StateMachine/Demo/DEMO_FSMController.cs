@@ -19,7 +19,7 @@ namespace GameDevStack.Demos
             {
                 new DEMO_IdleState(this),
                 new DEMO_MoveState(this)
-            }, State.Move, m_PlayingAtStart);
+            }, State.Idle, m_PlayingAtStart);
         }
 
         protected virtual void Start()

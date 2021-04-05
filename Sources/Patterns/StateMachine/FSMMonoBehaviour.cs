@@ -8,12 +8,7 @@ namespace GameDevStack.Patterns
     public class FSMMonoBehaviour<T> : MonoBehaviour where T : Enum
     {
         [SerializeField] protected FSM<T> m_FSM = null;
-
-        // Debug
-        [Space]
-        [SerializeField] private string m_CurrentStateString = null;
-        [SerializeField] private string m_LastStateString = null;
-        [SerializeField] private bool m_IsPlaying = false;
+        public FSM<T> FSM => m_FSM;
 
         protected virtual void InitializeFSM(List<IState> states, T defaultState, bool startPlaying = true)
         {
@@ -35,13 +30,6 @@ namespace GameDevStack.Patterns
 
         protected virtual void FixedUpdate() => m_FSM.FixedUpdate();
         protected virtual void Update() => m_FSM.Update();
-        protected virtual void LateUpdate()
-        {
-            m_FSM.LateUpdate();
-
-            m_CurrentStateString = m_FSM.m_CurrentStateString;
-            m_LastStateString = m_FSM.m_LastStateString;
-            m_IsPlaying = m_FSM.IsPlaying;
-        }
+        protected virtual void LateUpdate() => m_FSM.LateUpdate();
     }
 }

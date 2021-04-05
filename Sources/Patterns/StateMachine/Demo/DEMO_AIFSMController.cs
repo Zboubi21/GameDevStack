@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GameDevStack.Patterns;
+using UnityEngine;
 
 namespace GameDevStack.Demos
 {
@@ -7,6 +8,8 @@ namespace GameDevStack.Demos
     {
         protected override void InitializeFSM(List<IState> states, State defaultState, bool startPlaying = true)
         {
+            defaultState = State.Move;
+
             // V1 : Court mais possible d'avoir des erreurs
             //states[1] = new DEMO_AIMoveState(this);
 
@@ -37,6 +40,12 @@ namespace GameDevStack.Demos
             //);
 
             base.InitializeFSM(states, defaultState, startPlaying);
+        }
+
+        [ContextMenu("Override State")]
+        private void OverrideState()
+        {
+            m_FSM.OverrideState(State.Move, new DEMO_AIMoveState(this));
         }
     }
 }
