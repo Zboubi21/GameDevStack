@@ -9,18 +9,23 @@ namespace GameDevStack.Demos
     public class DEMO_FSMController : FSMMonoBehaviour<State>
     {
         [Space]
+        [SerializeField] private bool m_PlayingAtStart = false;
         [SerializeField] private KeyCode m_IdleKeyCode = default;
         [SerializeField] private KeyCode m_MoveKeyCode = default;
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            SetupStateMachine(new List<IState>
+            InitializeFSM(new List<IState>
             {
                 new DEMO_IdleState(this),
                 new DEMO_MoveState(this)
-            }, State.Move);
+            }, State.Move, m_PlayingAtStart);
+        }
 
-            CheckLastState();
+        protected virtual void Start()
+        {
+            if (m_PlayingAtStart)
+                StartFSM();
         }
 
         protected override void Update()

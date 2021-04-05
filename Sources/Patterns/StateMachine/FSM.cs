@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GameDevStack.Patterns
 {
     [Serializable]
-    public class FSM<T>
+    public class FSM<T> where T : Enum
     {
         /************
         * Constants *
@@ -51,9 +51,9 @@ namespace GameDevStack.Patterns
             }
         }
 
-        /**************
-        * Constructor *
-        **************/
+        /*****************
+        * Initialization *
+        *****************/
         public FSM(List<IState> statesAdded, T defaultState)
         {
             List<T> stateEnum = Enum.GetValues(typeof(T)).Cast<T>().ToList();
@@ -67,6 +67,17 @@ namespace GameDevStack.Patterns
             }
 
             SetCurrentState(defaultState);
+        }
+
+        // Pas sûr que ce soit une bonne idée/utile de pouvoir faire ça "en cours de jeu"
+        public void OverrideState(T state, IState newState)
+        {
+            m_States[state] = newState;
+
+            if (CurrentState.ToString() == state.ToString())
+                SetCurrentState(state);
+            if (TryGetLastState(out T lastState) && lastState.ToString() == state.ToString())
+                SetLastState(state);
         }
 
         /*******
@@ -85,11 +96,7 @@ namespace GameDevStack.Patterns
             if (!m_IsPlaying) return;
 
             ExitCurrentIState();
-
-            m_LastIState = m_CurrentIState;
-            m_LastState = m_CurrentState;
-            m_LastStateString = m_CurrentState.ToString();
-
+            SetLastState(m_CurrentState);
             SetCurrentState(state);
         }
 
@@ -103,27 +110,40 @@ namespace GameDevStack.Patterns
             m_IsPlaying = false;
         }
 
+        private void SetLastState(T state)
+        {
+            m_LastIState = m_States[state];
+            m_LastState = state;
+            //m_LastStateString = m_LastState.ToString();
+            m_LastStateString = m_LastIState.ToString();
+        }
+
         private void SetCurrentState(T state)
         {
             m_CurrentIState = m_States[state];
             m_CurrentState = state;
-            m_CurrentStateString = m_CurrentState.ToString();
+            //m_CurrentStateString = m_CurrentState.ToString();
+            m_CurrentStateString = m_CurrentIState.ToString();
             EnterCurrentIState();
         }
 
         private void EnterCurrentIState()
         {
             if (!m_IsPlaying) return;
+
             m_CurrentIState.Enter();
-            Debug.Log(m_CurrentState + " Enter");
+            //Debug.Log(m_CurrentState + " Enter");
+            Debug.Log(m_CurrentIState + " Enter");
         }
 
         private void ExitCurrentIState()
         {
             if (!m_IsPlaying) return;
+
             m_CurrentIState.Exit();
             if (m_CurrentIState != null)
-                Debug.Log(m_CurrentState + " Exit");
+                Debug.Log(m_CurrentIState + " Exit");
+            //Debug.Log(m_CurrentState + " Exit");
         }
 
         /*********
@@ -143,6 +163,46 @@ namespace GameDevStack.Patterns
         {
             if (!m_IsPlaying) return;
             m_CurrentIState?.LateUpdate();
+        }
+
+        /**********
+        * Helpers *
+        **********/
+        public static List<IState> ReplaceState(List<IState> states, IState oldState, IState newState)
+        {
+            List<IState> newStates = new List<IState>(states);
+            for (int i = 0; i < states.Count; i++)
+            {
+                if (states[i].GetType() == oldState.GetType())
+                {
+                    newStates[i] = newState;
+                    return newStates;
+                }
+            }
+            return newStates;
+        }
+
+        public static List<IState> ReplaceState(List<IState> states, T state, IState newState)
+        {
+            List<IState> newStates = new List<IState>(states);
+            List<T> stateEnum = Enum.GetValues(typeof(T)).Cast<T>().ToList();
+            int index = stateEnum.IndexOf(state);
+            newStates[index] = newState;
+            return newStates;
+        }
+    }
+
+    //public class FSMUtilities<T, U> where U : Enum
+    public class FSMUtilities
+    {
+        public static List<T> ReplaceType<T, U>(List<T> states, U state, T newState) where U : Enum
+        {
+            List<T> newStates = new List<T>(states);
+            List<U> stateEnum = Enum.GetValues(typeof(U)).Cast<U>().ToList();
+            int index = stateEnum.IndexOf(state);
+            if (index != -1)
+                newStates[index] = newState;
+            return newStates;
         }
     }
 }

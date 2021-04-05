@@ -1,10 +1,12 @@
-﻿namespace GameDevStack.Patterns
-{
-    public class AdvancedState<TOne, TTWo> where TOne : FSMMonoBehaviour<TTWo>
-    {
-        protected TOne m_FSMController;
+﻿using System;
 
-        public AdvancedState(TOne fSMController)
+namespace GameDevStack.Patterns
+{
+    public class AdvancedState<T, U> where T : FSMMonoBehaviour<U> where U : Enum
+    {
+        protected T m_FSMController;
+
+        public AdvancedState(T fSMController)
         {
             m_FSMController = fSMController;
         }

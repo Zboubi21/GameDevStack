@@ -5,23 +5,27 @@ using UnityEngine;
 namespace GameDevStack.Patterns
 {
     [Serializable]
-    public class FSMMonoBehaviour<T> : MonoBehaviour
+    public class FSMMonoBehaviour<T> : MonoBehaviour where T : Enum
     {
         [SerializeField] protected FSM<T> m_FSM = null;
 
         // Debug
-        [SerializeField] private bool m_PlayingAtStart = false;
         [Space]
         [SerializeField] private string m_CurrentStateString = null;
         [SerializeField] private string m_LastStateString = null;
         [SerializeField] private bool m_IsPlaying = false;
 
-        protected void SetupStateMachine(List<IState> states, T defaultState)
+        protected virtual void InitializeFSM(List<IState> states, T defaultState, bool startPlaying = true)
         {
             m_FSM = new FSM<T>(states, defaultState);
 
-            if (m_PlayingAtStart)
+            if (startPlaying)
                 m_FSM.Start();
+        }
+
+        public void StartFSM()
+        {
+            m_FSM.Start();
         }
 
         public void ChangeState(T state)
