@@ -2,7 +2,7 @@
 
 namespace GameDevStack.Patterns
 {
-    public class AdvancedState<T, U> where T : FSMMonoBehaviour<U> where U : Enum
+    public class AdvancedState<T, Enum> where T : FSMMonoBehaviour<Enum>
     {
         protected T m_FSMController;
 

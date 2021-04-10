@@ -28,11 +28,5 @@ namespace GameDevStack.Demos
 
             base.InitializeFSM(states, defaultState, startPlaying);
         }
-
-        [ContextMenu("Override State")]
-        private void OverrideState()
-        {
-            m_FSM.OverrideState(State.Move, new DEMO_AIMoveState(this));
-        }
     }
 }
