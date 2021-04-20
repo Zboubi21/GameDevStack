@@ -2,7 +2,7 @@
 
 namespace GameDevStack.Demos
 {
-    public class DEMO_AIIdleState : AdvancedState<DEMO_FSMController, State>, IState
+    public class DEMO_AIIdleState : AdvancedState<DEMO_FSMController>, IState
     {
         public DEMO_AIIdleState(DEMO_FSMController fSMController) : base(fSMController) { }
 

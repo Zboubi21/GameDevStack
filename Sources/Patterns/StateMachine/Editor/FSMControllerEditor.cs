@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEditor;
 using GameDevStack.Patterns;
 
-namespace GameDevStack.Demos
+namespace GameDevStack.Patterns
 {
-    [CustomEditor(typeof(DEMO_FSMController), true)]
-    public class DEMO_FSMControllerEditor : Editor
+    [CustomEditor(typeof(FSMController), true)]
+    public class FSMControllerEditor : Editor
     {
         private const string HELPBOX_NULL_LAST_STATES = "Your FSM do not contain last states!";
         private const string HELPBOX_FSM_NULL = "Your FSM is not initialized!";
@@ -14,13 +14,13 @@ namespace GameDevStack.Demos
         private static bool m_DataFlodout = false;
         private static bool m_LastStatesFlodout = false;
 
-        private DEMO_FSMController m_FSMController;
-        private FSM<State> m_FSM;
+        private FSMController m_FSMMonoBehaviour;
+        private FSM m_FSM;
 
         private void OnEnable()
         {
-            m_FSMController = (DEMO_FSMController)target;
-            m_FSM = m_FSMController.FSM;
+            m_FSMMonoBehaviour = (FSMController)target;
+            m_FSM = m_FSMMonoBehaviour.FSM;
         }
 
         public override void OnInspectorGUI()
@@ -51,7 +51,7 @@ namespace GameDevStack.Demos
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Initialized States");
-            foreach (KeyValuePair<State, IState> kvp in m_FSM.States)
+            foreach (KeyValuePair<string, IState> kvp in m_FSM.States)
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.TextField(kvp.Key.ToString());
@@ -66,11 +66,11 @@ namespace GameDevStack.Demos
 
             EditorGUILayout.Space();
 
-            if (m_FSM.TryGetLastState(out State lastState))
+            if (m_FSM.TryGetLastState(out string lastState))
                 EditorGUILayout.TextField("Last Enum State", lastState.ToString());
 
             if (m_FSM.LastIState != null)
-            EditorGUILayout.TextField("Last State", m_FSM.LastIState.ToString());
+                EditorGUILayout.TextField("Last State", m_FSM.LastIState.ToString());
 
             EditorGUILayout.Space();
 
@@ -91,7 +91,7 @@ namespace GameDevStack.Demos
             {
                 EditorGUILayout.TextField((m_FSM.LastStates.Count - i).ToString(), m_FSM.LastStates[i].ToString());
             }
-            
+
         }
     }
 }

@@ -3,10 +3,10 @@
 namespace GameDevStack.Demos
 {
     //public class DEMO_IdleState : IState
-    public class DEMO_IdleState : AdvancedState<DEMO_FSMController, State>, IState
+    public class DEMO_IdleState : AdvancedState<DEMO_FSMController>, IState
     {
-        //protected T m_FSMController;
-        //public DEMO_IdleState(FSMController fSMController)
+        //protected DEMO_FSMController m_FSMController;
+        //public DEMO_IdleState(DEMO_FSMController fSMController)
         //{
         //    m_FSMController = fSMController;
         //}

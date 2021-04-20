@@ -6,7 +6,7 @@ namespace GameDevStack.Demos
 {
     public enum State { Idle, Move }
 
-    public class DEMO_FSMController : FSMMonoBehaviour<State>
+    public class DEMO_FSMController : FSMController
     {
         [Space]
         [SerializeField] private bool m_PlayingAtStart = false;
@@ -50,17 +50,17 @@ namespace GameDevStack.Demos
             m_FSM.Stop();
         }
 
-        [ContextMenu("Check Last State")]
-        private void CheckLastState()
-        {
-            if (m_FSM.TryGetLastState(out State lastState))
-            {
-                Debug.Log("TRUE: last state = " + lastState);
-            }
-            else
-            {
-                Debug.Log("FALSE: last state = " + lastState);
-            }
-        }
+        //[ContextMenu("Check Last State")]
+        //private void CheckLastState()
+        //{
+        //    if (m_FSM.TryGetLastState(out State lastState))
+        //    {
+        //        Debug.Log("TRUE: last state = " + lastState);
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("FALSE: last state = " + lastState);
+        //    }
+        //}
     }
 }

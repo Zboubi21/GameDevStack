@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace GameDevStack.Patterns
 {
-    [Serializable]
-    public class FSM<Enum>
+    public class FSM
     {
         /************
         * Constants *
@@ -15,39 +14,30 @@ namespace GameDevStack.Patterns
         private const int MAX_LAST_STATES_COUNT = 10;
         private const string SET_MAX_LAST_STATES_COUNT = "You cannot set a count < 1!";
 
-        /*****************
-        * SerializeField *
-        *****************/
-        [Header("Debug")]
-        [SerializeField] private string m_CurrentStateString;
-        [SerializeField] private string m_LastStateString;
-
         /**********
         * Private *
         **********/
-        private Dictionary<Enum, IState> m_States = new Dictionary<Enum, IState>();
+        private Dictionary<string, IState> m_States = new Dictionary<string, IState>();
         private IState m_CurrentIState = null;
-        private Enum m_CurrentState = default;
+        private string m_CurrentState = default;
         private IState m_LastIState = null;
-        private Enum m_LastState = default;
+        private string m_LastState = default;
         private bool m_IsPlaying = false;
-        private List<Enum> m_LastStates = new List<Enum>();
+        private List<string> m_LastStates = new List<string>();
 
         /**********
         * Getters *
         **********/
-        public Dictionary<Enum, IState> States => m_States;
+        public Dictionary<string, IState> States => m_States;
         public IState CurrentIState => m_CurrentIState;
-        public Enum CurrentState => m_CurrentState;
-        //public Enum LastState => m_LastIState == null ? default : m_LastState;
-        public string CurrentStateString => m_CurrentStateString;
+        public string CurrentState => m_CurrentState;
+        //public string LastState => m_LastIState == null ? default : m_LastState;
         public IState LastIState => m_LastIState;
-        public string LastStateString => m_LastStateString;
         public bool IsPlaying => m_IsPlaying;
-        public List<Enum> LastStates => m_LastStates;
+        public List<string> LastStates => m_LastStates;
         private int m_MaxLastStatesCount = -1;
 
-        public bool TryGetLastState(out Enum lastState)
+        public bool TryGetLastState(out string lastState)
         {
             if (m_LastIState == null)
             {
@@ -66,17 +56,19 @@ namespace GameDevStack.Patterns
         *****************/
         public FSM(List<IState> statesAdded, Enum defaultState)
         {
-            List<Enum> stateEnum = System.Enum.GetValues(typeof(Enum)).Cast<Enum>().ToList();
+            string defaultStateName = defaultState.ToString();
+            Array array = defaultState.GetType().GetEnumValues();
+            List<string> states = System.Enum.GetValues(defaultState.GetType()).Cast<Enum>().ToList().ConvertAll(e => e.ToString());
 
-            if (stateEnum.Count != statesAdded.Count)
+            if (states.Count != statesAdded.Count)
                 Debug.LogError(STATE_COUNT_ERROR);
 
-            for (int i = 0; i < stateEnum.Count; i++)
+            for (int i = 0; i < states.Count; i++)
             {
-                m_States.Add(stateEnum[i], statesAdded[i]);
+                m_States.Add(states[i], statesAdded[i]);
             }
 
-            SetCurrentState(defaultState);
+            SetCurrentState(defaultStateName);
         }
 
         /*******
@@ -97,7 +89,7 @@ namespace GameDevStack.Patterns
 
             ExitCurrentIState();
             SetLastState(m_CurrentState);
-            SetCurrentState(state);
+            SetCurrentState(state.ToString());
         }
 
         public void Stop()
@@ -119,21 +111,17 @@ namespace GameDevStack.Patterns
         }
 
         // Private
-        private void SetLastState(Enum state)
+        private void SetLastState(string state)
         {
             m_LastIState = m_States[state];
             m_LastState = state;
-            //m_LastStateString = m_LastState.ToString();
-            m_LastStateString = m_LastIState.ToString();
             AddLastState(state);
         }
 
-        private void SetCurrentState(Enum state)
+        private void SetCurrentState(string state)
         {
             m_CurrentIState = m_States[state];
             m_CurrentState = state;
-            //m_CurrentStateString = m_CurrentState.ToString();
-            m_CurrentStateString = m_CurrentIState.ToString();
             EnterCurrentIState();
         }
 
@@ -156,7 +144,7 @@ namespace GameDevStack.Patterns
             //Debug.Log(m_CurrentState + " Exit");
         }
 
-        private void AddLastState(Enum lastState)
+        private void AddLastState(string lastState)
         {
             int maxCount = m_MaxLastStatesCount == -1 ? MAX_LAST_STATES_COUNT : m_MaxLastStatesCount;
             if (m_LastStates.Count + 1 > maxCount)

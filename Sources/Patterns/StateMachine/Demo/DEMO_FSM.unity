@@ -247,7 +247,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527074057cece3548bc51b9b5789af3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayingAtStart: 1
+  m_FSM:
+    m_CurrentStateString: 
+    m_LastStateString: 
+  m_PlayingAtStart: 0
   m_IdleKeyCode: 113
   m_MoveKeyCode: 115
 --- !u!1 &1618294270
@@ -279,7 +282,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b31aa8243ae394e9cd2bc5161e3b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayingAtStart: 1
+  m_FSM:
+    m_CurrentStateString: 
+    m_LastStateString: 
+  m_PlayingAtStart: 0
   m_IdleKeyCode: 97
   m_MoveKeyCode: 122
 --- !u!4 &1618294272

@@ -4,15 +4,14 @@ using UnityEngine;
 
 namespace GameDevStack.Patterns
 {
-    [Serializable]
-    public class FSMMonoBehaviour<Enum> : MonoBehaviour
+    public class FSMController : MonoBehaviour
     {
-        [SerializeField] protected FSM<Enum> m_FSM = null;
-        public FSM<Enum> FSM => m_FSM;
+        protected FSM m_FSM = null;
+        public FSM FSM => m_FSM;
 
         protected virtual void InitializeFSM(List<IState> states, Enum defaultState, bool startPlaying = true)
         {
-            m_FSM = new FSM<Enum>(states, defaultState);
+            m_FSM = new FSM(states, defaultState);
 
             if (startPlaying)
                 m_FSM.Start();
