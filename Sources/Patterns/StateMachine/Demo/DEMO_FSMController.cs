@@ -12,6 +12,10 @@ namespace GameDevStack.Demos
         [SerializeField] private bool m_PlayingAtStart = false;
         [SerializeField] private KeyCode m_IdleKeyCode = default;
         [SerializeField] private KeyCode m_MoveKeyCode = default;
+        [Space]
+        [SerializeField] private bool m_IsMoving = false;
+
+        public bool IsMoving => m_IsMoving;
 
         protected virtual void Awake()
         {
@@ -49,18 +53,5 @@ namespace GameDevStack.Demos
         {
             m_FSM.Stop();
         }
-
-        //[ContextMenu("Check Last State")]
-        //private void CheckLastState()
-        //{
-        //    if (m_FSM.TryGetLastState(out State lastState))
-        //    {
-        //        Debug.Log("TRUE: last state = " + lastState);
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("FALSE: last state = " + lastState);
-        //    }
-        //}
     }
 }

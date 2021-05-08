@@ -29,6 +29,10 @@ namespace GameDevStack.Patterns
 
         protected virtual void FixedUpdate() => m_FSM.FixedUpdate();
         protected virtual void Update() => m_FSM.Update();
-        protected virtual void LateUpdate() => m_FSM.LateUpdate();
+        protected virtual void LateUpdate()
+        {
+            m_FSM.LateUpdate();
+            m_FSM.CheckChangeStateUpdate();
+        }
     }
 }

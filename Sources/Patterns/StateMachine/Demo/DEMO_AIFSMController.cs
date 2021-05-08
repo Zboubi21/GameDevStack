@@ -8,7 +8,7 @@ namespace GameDevStack.Demos
     {
         protected override void InitializeFSM(List<IState> states, Enum defaultState, bool startPlaying = true)
         {
-            defaultState = State.Move;
+            //defaultState = State.Move;
 
             //states.ReplaceState(State.Idle, new DEMO_AIIdleState(this));
             states.ReplaceState(State.Move, new DEMO_AIMoveState(this));

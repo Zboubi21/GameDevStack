@@ -6,6 +6,16 @@ namespace GameDevStack.Demos
     {
         public DEMO_AIIdleState(DEMO_FSMController fSMController) : base(fSMController) { }
 
+        public bool CanEnter()
+        {
+            return true;
+        }
+
+        public bool CanExit()
+        {
+            return true;
+        }
+
         public void Enter()
         {
         }
@@ -18,11 +28,11 @@ namespace GameDevStack.Demos
         {
         }
 
-        public void LateUpdate()
+        public void Update()
         {
         }
 
-        public void Update()
+        public void LateUpdate()
         {
         }
     }

@@ -25,6 +25,10 @@ namespace GameDevStack.Patterns
         private bool m_IsPlaying = false;
         private List<string> m_LastStates = new List<string>();
 
+        private bool m_NeedChangeState = false;
+        private bool m_ForceState = false;
+        private string m_ChangeState;
+
         /**********
         * Getters *
         **********/
@@ -83,13 +87,19 @@ namespace GameDevStack.Patterns
             EnterCurrentIState();
         }
 
-        public void ChangeState(Enum state)
+        public void ChangeState(Enum state, bool forceState = false)
         {
             if (!m_IsPlaying) return;
 
-            ExitCurrentIState();
-            SetLastState(m_CurrentState);
-            SetCurrentState(state.ToString());
+            if (m_NeedChangeState && !forceState)
+            {
+                // Another ChangeState was already triggered during the same Update
+                return;
+            }
+
+            m_NeedChangeState = true;
+            m_ForceState = forceState;
+            m_ChangeState = state.ToString();
         }
 
         public void Stop()
@@ -169,6 +179,20 @@ namespace GameDevStack.Patterns
         {
             if (!m_IsPlaying) return;
             m_CurrentIState?.LateUpdate();
+        }
+        public void CheckChangeStateUpdate()
+        {
+            if (!m_IsPlaying) return;
+            if (m_NeedChangeState)
+            {
+                if (m_ForceState || (m_CurrentIState.CanExit() && m_States[m_ChangeState].CanEnter()))
+                {
+                    ExitCurrentIState();
+                    SetLastState(m_CurrentState);
+                    SetCurrentState(m_ChangeState);
+                }
+                m_NeedChangeState = false;
+            }
         }
     }
 }
