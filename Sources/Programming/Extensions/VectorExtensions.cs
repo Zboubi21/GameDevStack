@@ -17,6 +17,16 @@ public static class VectorExtensions
         return v;
     }
 
+    public static Vector2 GetCenterPosition(this Vector2[] positions)
+    {
+        Vector2 totalPos = Vector2.zero;
+        for (int i = 0, l = positions.Length; i < l; i++)
+        {
+            totalPos += positions[i];
+        }
+        return totalPos / positions.Length;
+    }
+
     /**********
     * Vector3 *
     **********/
@@ -36,5 +46,15 @@ public static class VectorExtensions
     {
         v.z = z;
         return v;
+    }
+
+    public static Vector3 GetCenterPosition(this Vector3[] positions)
+    {
+        Vector3 totalPos = Vector3.zero;
+        for (int i = 0, l = positions.Length; i < l; i++)
+        {
+            totalPos += positions[i];
+        }
+        return totalPos / positions.Length;
     }
 }
