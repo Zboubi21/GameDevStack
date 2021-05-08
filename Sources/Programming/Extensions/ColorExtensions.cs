@@ -2,8 +2,25 @@
 
 public static class ColorExtensions
 {
-    public static Color SetAlpha(this Color c, float alpha)
+    public static Color SetR(this Color c, float r)
     {
-        return new Color(c.r, c.g, c.b, alpha);
+        c.r = r;
+        return c;
+    }
+    public static Color SetG(this Color c, float g)
+    {
+        c.g = g;
+        return c;
+    }
+    public static Color SetB(this Color c, float b)
+    {
+        c.b = b;
+        return c;
+    }
+
+    public static Color SetA(this Color c, float a)
+    {
+        c.a = a;
+        return c;
     }
 }
