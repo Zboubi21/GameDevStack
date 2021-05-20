@@ -41,17 +41,5 @@ namespace GameDevStack.Demos
             if (Input.GetKeyDown(m_MoveKeyCode))
                 ChangeState(State.Move);
         }
-
-        [ContextMenu("Start SM")]
-        private void StartSM()
-        {
-            m_FSM.Start();
-        }
-
-        [ContextMenu("Stop SM")]
-        private void StopSM()
-        {
-            m_FSM.Stop();
-        }
     }
 }

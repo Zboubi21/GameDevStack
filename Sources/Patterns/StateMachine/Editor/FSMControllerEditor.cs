@@ -46,7 +46,8 @@ namespace GameDevStack.Patterns
 
             GUI.enabled = false;
 
-            EditorGUILayout.Toggle("Is Playing", m_FSM.IsPlaying);
+            EditorGUILayout.Toggle("Is Started", m_FSM.IsStarted);
+            EditorGUILayout.Toggle("On Pause", m_FSM.OnPause);
 
             EditorGUILayout.Space();
 

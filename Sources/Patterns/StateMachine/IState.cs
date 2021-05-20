@@ -13,5 +13,9 @@
         void LateUpdate();
 
         //bool TryGetNextState(out string state);
+
+        //void GetNextFixedState();
+        //void GetNextState();
+        //void GetNextLateState();
     }
 }

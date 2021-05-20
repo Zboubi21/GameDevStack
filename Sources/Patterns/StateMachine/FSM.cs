@@ -18,12 +18,17 @@ namespace GameDevStack.Patterns
         * Private *
         **********/
         private Dictionary<string, IState> m_States = new Dictionary<string, IState>();
+
         private IState m_CurrentIState = null;
-        private string m_CurrentState = default;
         private IState m_LastIState = null;
-        private string m_LastState = default;
-        private bool m_IsPlaying = false;
+
+        private string m_DefaultState = null;
+        private string m_CurrentState = null;
+        private string m_LastState = null;
         private List<string> m_LastStates = new List<string>();
+
+        private bool m_IsStarted = false;
+        private bool m_OnPause = false;
 
         private bool m_NeedChangeState = false;
         private bool m_ForceState = false;
@@ -33,19 +38,24 @@ namespace GameDevStack.Patterns
         * Getters *
         **********/
         public Dictionary<string, IState> States => m_States;
+
         public IState CurrentIState => m_CurrentIState;
+        public IState LastIState => m_LastIState;
+
         public string CurrentState => m_CurrentState;
         //public string LastState => m_LastIState == null ? default : m_LastState;
-        public IState LastIState => m_LastIState;
-        public bool IsPlaying => m_IsPlaying;
+        //public string? LastState => m_LastIState == null ? null : m_LastState;
         public List<string> LastStates => m_LastStates;
         private int m_MaxLastStatesCount = -1;
+
+        public bool IsStarted => m_IsStarted;
+        public bool OnPause => m_OnPause;
 
         public bool TryGetLastState(out string lastState)
         {
             if (m_LastIState == null)
             {
-                lastState = default;
+                lastState = null;
                 return false;
             }
             else
@@ -72,24 +82,37 @@ namespace GameDevStack.Patterns
                 m_States.Add(states[i], statesAdded[i]);
             }
 
+            m_DefaultState = defaultStateName;
             SetCurrentState(defaultStateName);
         }
 
         /*******
         * Core *
         *******/
-        // Public
+        // Public API
         public void Start()
         {
-            if (m_IsPlaying) return;
-            m_IsPlaying = true;
+            if (m_IsStarted) return;
+            m_IsStarted = true;
+            m_OnPause = false;
 
             EnterCurrentIState();
         }
 
+        public void Stop()
+        {
+            if (!m_IsStarted) return;
+
+            ExitCurrentIState();
+            m_CurrentState = m_DefaultState;
+
+            m_IsStarted = false;
+            m_OnPause = false;
+        }
+
         public void ChangeState(Enum state, bool forceState = false)
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted || m_OnPause) return;
 
             if (m_NeedChangeState && !forceState)
             {
@@ -102,14 +125,16 @@ namespace GameDevStack.Patterns
             m_ChangeState = state.ToString();
         }
 
-        public void Stop()
+        public void Play()
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted || !m_OnPause) return;
+            m_OnPause = false;
+        }
 
-            ExitCurrentIState();
-            m_CurrentState = default;
-
-            m_IsPlaying = false;
+        public void Pause()
+        {
+            if (!m_IsStarted || m_OnPause) return;
+            m_OnPause = true;
         }
 
         public void SetMaxLastStatesCount(int count)
@@ -137,7 +162,7 @@ namespace GameDevStack.Patterns
 
         private void EnterCurrentIState()
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted) return;
 
             m_CurrentIState.Enter();
             //Debug.Log(m_CurrentState + " Enter");
@@ -146,7 +171,7 @@ namespace GameDevStack.Patterns
 
         private void ExitCurrentIState()
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted) return;
 
             m_CurrentIState.Exit();
             if (m_CurrentIState != null)
@@ -167,22 +192,25 @@ namespace GameDevStack.Patterns
         *********/
         public void FixedUpdate()
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted || m_OnPause) return;
             m_CurrentIState?.FixedUpdate();
+            //m_CurrentIState?.GetNextFixedState();
         }
         public void Update()
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted || m_OnPause) return;
             m_CurrentIState?.Update();
+            //m_CurrentIState?.GetNextState();
         }
         public void LateUpdate()
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted || m_OnPause) return;
             m_CurrentIState?.LateUpdate();
+            //m_CurrentIState?.GetNextLateState();
         }
         public void CheckChangeStateUpdate()
         {
-            if (!m_IsPlaying) return;
+            if (!m_IsStarted || m_OnPause) return;
             if (m_NeedChangeState)
             {
                 if (m_ForceState || (m_CurrentIState.CanExit() && m_States[m_ChangeState].CanEnter()))
