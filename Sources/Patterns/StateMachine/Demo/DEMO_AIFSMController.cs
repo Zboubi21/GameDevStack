@@ -6,7 +6,7 @@ namespace GameDevStack.Demos
 {
     public class DEMO_AIFSMController : DEMO_FSMController
     {
-        protected override void InitializeFSM(List<IState> states, Enum defaultState, bool startPlaying = true)
+        protected override void InitializeFSM(List<IState> states, Enum defaultState, FSMUpdateType updateType = FSMUpdateType.EndingLateUpdate, bool playingAtInitialization = true)
         {
             //defaultState = State.Move;
 
@@ -26,7 +26,7 @@ namespace GameDevStack.Demos
             //}
             //);
 
-            base.InitializeFSM(states, defaultState, startPlaying);
+            base.InitializeFSM(states, defaultState, updateType, playingAtInitialization);
         }
     }
 }

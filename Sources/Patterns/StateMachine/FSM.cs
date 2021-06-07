@@ -5,6 +5,19 @@ using UnityEngine;
 
 namespace GameDevStack.Patterns
 {
+    /*******
+    * Enum *
+    *******/
+    public enum FSMUpdateType
+    {
+        BeginingFixedUpdate,
+        EndingFixedUpdate,
+        BeginingUpdate,
+        EndingUpdate,
+        BeginingLateUpdate,
+        EndingLateUpdate
+    }
+
     public class FSM
     {
         /************
@@ -30,9 +43,7 @@ namespace GameDevStack.Patterns
         private bool m_IsStarted = false;
         private bool m_OnPause = false;
 
-        private bool m_NeedChangeState = false;
-        private bool m_ForceState = false;
-        private string m_ChangeState;
+        private FSMUpdateType m_UpdateType;
 
         /**********
         * Getters *
@@ -68,11 +79,12 @@ namespace GameDevStack.Patterns
         /*****************
         * Initialization *
         *****************/
-        public FSM(List<IState> statesAdded, Enum defaultState)
+        public FSM(List<IState> statesAdded, Enum defaultState, FSMUpdateType updateType)
         {
             string defaultStateName = defaultState.ToString();
             Array array = defaultState.GetType().GetEnumValues();
             List<string> states = System.Enum.GetValues(defaultState.GetType()).Cast<Enum>().ToList().ConvertAll(e => e.ToString());
+            states.RemoveAt(0); // Removing the first state because it is just used to check null Enum
 
             if (states.Count != statesAdded.Count)
                 Debug.LogError(STATE_COUNT_ERROR);
@@ -81,6 +93,8 @@ namespace GameDevStack.Patterns
             {
                 m_States.Add(states[i], statesAdded[i]);
             }
+
+            m_UpdateType = updateType;
 
             m_DefaultState = defaultStateName;
             SetCurrentState(defaultStateName);
@@ -110,19 +124,12 @@ namespace GameDevStack.Patterns
             m_OnPause = false;
         }
 
-        public void ChangeState(Enum state, bool forceState = false)
+        public void ChangeState(Enum state)
         {
             if (!m_IsStarted || m_OnPause) return;
-
-            if (m_NeedChangeState && !forceState)
-            {
-                // Another ChangeState was already triggered during the same Update
-                return;
-            }
-
-            m_NeedChangeState = true;
-            m_ForceState = forceState;
-            m_ChangeState = state.ToString();
+            ExitCurrentIState();
+            SetLastState(m_CurrentState);
+            SetCurrentState(state.ToString());
         }
 
         public void Play()
@@ -193,34 +200,47 @@ namespace GameDevStack.Patterns
         public void FixedUpdate()
         {
             if (!m_IsStarted || m_OnPause) return;
+
+            if (m_UpdateType == FSMUpdateType.BeginingFixedUpdate)
+                CheckChangeStateUpdate();
+
             m_CurrentIState?.FixedUpdate();
-            //m_CurrentIState?.GetNextFixedState();
+
+            if (m_UpdateType == FSMUpdateType.EndingFixedUpdate)
+                CheckChangeStateUpdate();
         }
         public void Update()
         {
             if (!m_IsStarted || m_OnPause) return;
+
+            if (m_UpdateType == FSMUpdateType.BeginingUpdate)
+                CheckChangeStateUpdate();
+
             m_CurrentIState?.Update();
-            //m_CurrentIState?.GetNextState();
+
+            if (m_UpdateType == FSMUpdateType.EndingUpdate)
+                CheckChangeStateUpdate();
         }
         public void LateUpdate()
         {
             if (!m_IsStarted || m_OnPause) return;
+
+            if (m_UpdateType == FSMUpdateType.BeginingLateUpdate)
+                CheckChangeStateUpdate();
+
             m_CurrentIState?.LateUpdate();
-            //m_CurrentIState?.GetNextLateState();
+
+            if (m_UpdateType == FSMUpdateType.EndingLateUpdate)
+                CheckChangeStateUpdate();
         }
-        public void CheckChangeStateUpdate()
+
+        private void CheckChangeStateUpdate()
         {
             if (!m_IsStarted || m_OnPause) return;
-            if (m_NeedChangeState)
-            {
-                if (m_ForceState || (m_CurrentIState.CanExit() && m_States[m_ChangeState].CanEnter()))
-                {
-                    ExitCurrentIState();
-                    SetLastState(m_CurrentState);
-                    SetCurrentState(m_ChangeState);
-                }
-                m_NeedChangeState = false;
-            }
+
+            Enum myEnum = m_CurrentIState.GetNextState();
+            if (Convert.ToInt32(myEnum) != 0 )
+                ChangeState(myEnum);
         }
     }
 }

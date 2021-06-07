@@ -1,39 +1,35 @@
-﻿using GameDevStack.Patterns;
+﻿using System;
+using GameDevStack.Patterns;
 
 namespace GameDevStack.Demos
 {
-    public class DEMO_AIIdleState : AdvancedState<DEMO_FSMController>, IState
+    public class DEMO_AIIdleState : State<DEMO_FSMController>
     {
         public DEMO_AIIdleState(DEMO_FSMController fSMController) : base(fSMController) { }
 
-        public bool CanEnter()
-        {
-            return true;
-        }
-
-        public bool CanExit()
-        {
-            return true;
-        }
-
-        public void Enter()
+        public override void Enter()
         {
         }
 
-        public void Exit()
+        public override void Exit()
         {
         }
 
-        public void FixedUpdate()
+        public override void FixedUpdate()
         {
         }
 
-        public void Update()
+        public override void Update()
         {
         }
 
-        public void LateUpdate()
+        public override void LateUpdate()
         {
+        }
+
+        public override Enum GetNextState()
+        {
+            return State.None;
         }
     }
 }

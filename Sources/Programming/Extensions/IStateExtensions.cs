@@ -30,7 +30,7 @@ namespace GameDevStack.Patterns
 
         private static void ReplaceIState<IState, Enum>(this List<IState> states, Enum targetState, IState newState, List<Enum> stateEnum)
         {
-            int index = stateEnum.IndexOf(targetState);
+            int index = stateEnum.IndexOf(targetState) - 1; // Removed the Enum: None
             states[index] = newState;
         }
     }

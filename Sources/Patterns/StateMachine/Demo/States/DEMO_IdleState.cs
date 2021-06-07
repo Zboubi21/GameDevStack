@@ -1,63 +1,38 @@
-﻿using GameDevStack.Patterns;
+﻿using System;
+using GameDevStack.Patterns;
 
 namespace GameDevStack.Demos
 {
-    //public class DEMO_IdleState : IState
-    public class DEMO_IdleState : AdvancedState<DEMO_FSMController>, IState
+    public class DEMO_IdleState : State<DEMO_FSMController>
     {
-        //private DEMO_FSMController m_FSMController;
-
-        //public DEMO_IdleState(DEMO_FSMController fSMController)
-        //{
-        //    m_FSMController = fSMController;
-        //}
-
         public DEMO_IdleState(DEMO_FSMController fSMController) : base(fSMController) { }
 
-        public bool CanEnter()
-        {
-            return true;
-        }
-
-        public bool CanExit()
-        {
-            return true;
-        }
-
-        public void Enter()
+        public override void Enter()
         {
         }
 
-        public void Exit()
+        public override void Exit()
         {
         }
 
-        public void FixedUpdate()
+        public override void FixedUpdate()
         {
         }
 
-        public void Update()
+        public override void Update()
+        {
+        }
+
+        public override void LateUpdate()
+        {
+        }
+
+        public override Enum GetNextState()
         {
             if (m_FSMController.IsMoving)
-                m_FSMController.ChangeState(State.Move);
+                return State.Move;
+
+            return State.None;
         }
-
-        public void LateUpdate()
-        {
-        }
-
-        //public bool TryGetNextState(out string state)
-        //{
-        //    state = State.Idle.ToString();
-
-        //    return false;
-        //}
-
-        //public bool TryGetNextState(out State state)
-        //{
-        //    state = State.Idle;
-
-        //    return false;
-        //}
     }
 }

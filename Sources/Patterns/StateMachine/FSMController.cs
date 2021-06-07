@@ -19,11 +19,11 @@ namespace GameDevStack.Patterns
         /*****************
         * Initialization *
         *****************/
-        protected virtual void InitializeFSM(List<IState> states, Enum defaultState, bool startPlaying = true)
+        protected virtual void InitializeFSM(List<IState> states, Enum defaultState, FSMUpdateType updateType = FSMUpdateType.EndingLateUpdate, bool playingAtInitialization = true)
         {
-            m_FSM = new FSM(states, defaultState);
+            m_FSM = new FSM(states, defaultState, updateType);
 
-            if (startPlaying)
+            if (playingAtInitialization)
                 m_FSM.Start();
         }
 
@@ -47,10 +47,6 @@ namespace GameDevStack.Patterns
         *********/
         protected virtual void FixedUpdate() => m_FSM.FixedUpdate();
         protected virtual void Update() => m_FSM.Update();
-        protected virtual void LateUpdate()
-        {
-            m_FSM.LateUpdate();
-            m_FSM.CheckChangeStateUpdate();
-        }
+        protected virtual void LateUpdate() => m_FSM.LateUpdate();
     }
 }

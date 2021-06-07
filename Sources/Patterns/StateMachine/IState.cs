@@ -2,9 +2,6 @@
 {
     public interface IState
     {
-        bool CanEnter();
-        bool CanExit();
-
         void Enter();
         void Exit();
 
@@ -12,10 +9,6 @@
         void Update();
         void LateUpdate();
 
-        //bool TryGetNextState(out string state);
-
-        //void GetNextFixedState();
-        //void GetNextState();
-        //void GetNextLateState();
+        System.Enum GetNextState();
     }
 }
